@@ -73,8 +73,7 @@ public class CoinController {
         }
 
 
-        Map<Integer, Object> coinMap = coinService.createCoinList(jsonCoinList);
-        List<CoinRaspiResponseDto> coinList = (List<CoinRaspiResponseDto>) coinMap.get(0);
+        List<CoinRaspiResponseDto> coinList = coinService.raspiCoinList(jsonCoinList);
 
         return coinList;
     }
