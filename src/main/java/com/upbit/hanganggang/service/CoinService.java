@@ -38,7 +38,7 @@ public class CoinService {
 
             String change = changeStringValue(jsonChange);
 
-            String changeRate = changeRateDisplay(jsonChange, jsonChangeRate);
+            Double changeRate = changeRateDisplay(jsonChange, jsonChangeRate);
 
             CoinPriceResponseDto coinPriceResponseDto = getCoinPriceResponseDto(decimalFormat, market,
                     tradePrice, change, changeRate);
@@ -78,14 +78,16 @@ public class CoinService {
         return coinList;
     }
 
-    private String changeRateDisplay(String jsonChange, String jsonChangeRate) {
+    private Double changeRateDisplay(String jsonChange, String jsonChangeRate) {
+        double changeRate = Double.parseDouble(jsonChangeRate);
         if (jsonChange.contains("FALL")) {
-            jsonChangeRate = "-" + jsonChangeRate.substring(0, 5) + "%";
-        } else if (jsonChange.contains("RISE")) {
-            jsonChangeRate = "+" + jsonChangeRate.substring(0 , 5) + "%";
+            changeRate *= -1;
         }
 
-        return jsonChangeRate;
+        // 소수점 둘째 자리까지 반올림
+        changeRate = Math.round(changeRate * 100.0) / 100.0;
+
+        return changeRate;
     }
 
     private static Integer getCount(Integer count, String jsonChange) {
@@ -99,7 +101,7 @@ public class CoinService {
 
     private static CoinPriceResponseDto getCoinPriceResponseDto(DecimalFormat decimalFormat, String market,
                                                                 Double tradePrice, String change,
-                                                                String changeRate) {
+                                                                Double changeRate) {
         CoinPriceResponseDto coinPriceResponseDto = new CoinPriceResponseDto();
         coinPriceResponseDto.setMarket(market);
         coinPriceResponseDto.setTradePrice(decimalFormat.format(tradePrice));
