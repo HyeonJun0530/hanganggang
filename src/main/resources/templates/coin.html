@@ -28,6 +28,7 @@
             <th>너가 산 코인이니?</th>
             <th>가격(원/KRW)</th>
             <th>한강뷰냐? 한강이냐?</th>
+            <th>변화율</th>
             <th></th>
         </tr>
         </thead>
@@ -36,6 +37,7 @@
             <td th:text="${coin.market}"></td>
             <td th:text="${coin.tradePrice}"></td>
             <td th:text="${coin.change}"></td>
+            <td th:text="${coin.changeRate}"></td>
             <td></td>
         </tr>
         </tbody>
