@@ -13,6 +13,7 @@
         max-width: 100%; /* 이미지의 최대 너비 설정 */
         max-height: 100%; /* 이미지의 최대 높이 설정 */
     }
+
 </style>
 <body>
 <div class="container">
@@ -28,7 +29,7 @@
             <th>너가 산 코인이니?</th>
             <th>가격(원/KRW)</th>
             <th>한강뷰냐? 한강이냐?</th>
-            <th>변화율</th>
+            <th>변화율(%)</th>
             <th></th>
         </tr>
         </thead>
@@ -44,5 +45,16 @@
     </table>
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
+<script>
+    // Function to reload the page after 5 seconds
+    function refreshPage() {
+        setTimeout(function() {
+            window.location.reload();
+        }, 10000); // 5000 milliseconds = 5 seconds
+    }
+
+    // Call the refreshPage function on page load
+    window.onload = refreshPage;
+</script>
 </body>
 </html>
