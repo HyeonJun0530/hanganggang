@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>한강 가즈아</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var button = document.querySelector('button');
+            button.addEventListener('click', function() {
+                window.location.href = '/btc-price';  // 다른 페이지의 URL로 변경해주세요
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>한강 가즈아</h1>
+<img src="/static/images/main.jpeg" alt="My Image"> <!-- 이미지 파일 경로 수정 -->
+<p>코인 시세 확인 - 한강 가즈아 입니다.</p>
+<button>입장</button>
+</body>
+</html>
