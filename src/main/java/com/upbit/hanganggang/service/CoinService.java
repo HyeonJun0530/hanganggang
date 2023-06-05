@@ -1,6 +1,7 @@
 package com.upbit.hanganggang.service;
 
 import com.upbit.hanganggang.dto.CoinPriceResponseDto;
+import com.upbit.hanganggang.dto.CoinRaspiResponseDto;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -31,12 +32,16 @@ public class CoinService {
             String market = jsonObject.get("market").toString();
             Double tradePrice = (Double) jsonObject.get("trade_price");
             String jsonChange = jsonObject.get("change").toString();
+            String jsonChangeRate = jsonObject.get("change_rate").toString();
 
             count = getCount(count, jsonChange);
 
             String change = changeStringValue(jsonChange);
 
-            CoinPriceResponseDto coinPriceResponseDto = getCoinPriceResponseDto(decimalFormat, market, tradePrice, change);
+            String changeRate = changeRateDisplay(jsonChange, jsonChangeRate);
+
+            CoinPriceResponseDto coinPriceResponseDto = getCoinPriceResponseDto(decimalFormat, market,
+                    tradePrice, change, changeRate);
 
             coinList.add(coinPriceResponseDto);
         }
@@ -47,8 +52,44 @@ public class CoinService {
         return coinMap;
     }
 
+    public List<CoinRaspiResponseDto> raspiCoinList(List<String> JsonCoinList) throws ParseException {
+
+        List<CoinRaspiResponseDto> coinList = new ArrayList<>();
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
+        for (String coin : JsonCoinList) {
+
+            coin = coin.replace("[", "").replace("]", "");
+
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(coin);
+
+            String market = jsonObject.get("market").toString();
+            Double tradePrice = (Double) jsonObject.get("trade_price");
+            String jsonChange = jsonObject.get("change").toString();
+
+            CoinRaspiResponseDto coinRaspiResponseDto = getCoinPriceResponseDto(decimalFormat, market,
+                    tradePrice, jsonChange);
+
+            coinList.add(coinRaspiResponseDto);
+        }
+
+
+        return coinList;
+    }
+
+    private String changeRateDisplay(String jsonChange, String jsonChangeRate) {
+        if (jsonChange.contains("FALL")) {
+            jsonChangeRate = "-" + jsonChangeRate.substring(0, 5) + "%";
+        } else if (jsonChange.contains("RISE")) {
+            jsonChangeRate = "+" + jsonChangeRate.substring(0 , 5) + "%";
+        }
+
+        return jsonChangeRate;
+    }
+
     private static Integer getCount(Integer count, String jsonChange) {
-        if(jsonChange.contains("FALL")) {
+        if (jsonChange.contains("FALL")) {
             count--;
         } else if (jsonChange.contains("RISE")) {
             count++;
@@ -56,12 +97,25 @@ public class CoinService {
         return count;
     }
 
-    private static CoinPriceResponseDto getCoinPriceResponseDto(DecimalFormat decimalFormat, String market, Double tradePrice, String change) {
+    private static CoinPriceResponseDto getCoinPriceResponseDto(DecimalFormat decimalFormat, String market,
+                                                                Double tradePrice, String change,
+                                                                String changeRate) {
         CoinPriceResponseDto coinPriceResponseDto = new CoinPriceResponseDto();
         coinPriceResponseDto.setMarket(market);
         coinPriceResponseDto.setTradePrice(decimalFormat.format(tradePrice));
         coinPriceResponseDto.setChange(change);
+        coinPriceResponseDto.setChangeRate(changeRate);
         return coinPriceResponseDto;
+    }
+
+    private static CoinRaspiResponseDto getCoinPriceResponseDto(DecimalFormat decimalFormat, String market,
+                                                                Double tradePrice, String change) {
+        CoinRaspiResponseDto coinRaspiResponseDto = new CoinRaspiResponseDto();
+        coinRaspiResponseDto.setMarket(market);
+        coinRaspiResponseDto.setTradePrice(decimalFormat.format(tradePrice));
+        coinRaspiResponseDto.setChange(change);
+
+        return coinRaspiResponseDto;
     }
 
     private String changeStringValue(String change) {
