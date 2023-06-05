@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+    .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 250px; /* 이미지의 높이 설정 */
+    }
+
+    .image-container img {
+        max-width: 100%; /* 이미지의 최대 너비 설정 */
+        max-height: 100%; /* 이미지의 최대 높이 설정 */
+    }
+</style>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div class="image-container">
+        <img th:if="${count > 0}" src="/static/images/image1.jpeg" alt="Image 1" />
+        <img th:if="${count < 0}" src="/static/images/image2.jpeg" alt="Image 2" />
+        <img th:if="${count == 0}" src="/static/images/image3.jpeg" alt="Image 3" />
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>너가 산 코인이니?</th>
+            <th>가격(원/KRW)</th>
+            <th>한강뷰냐? 한강이냐?</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="coin : ${coinList}">
+            <td th:text="${coin.market}"></td>
+            <td th:text="${coin.tradePrice}"></td>
+            <td th:text="${coin.change}"></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+</html>

@@ -1,31 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
     <title>한강 가즈아</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var button = document.querySelector('button');
-            button.addEventListener('click', function() {
-                window.location.href = '/btc-price';  // 다른 페이지의 URL로 변경해주세요
-            });
-        });
-    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<h1>한강 가즈아</h1>
-<img src="/static/images/main.jpeg" alt="My Image"> <!-- 이미지 파일 경로 수정 -->
-<p>코인 시세 확인 - 한강 가즈아 입니다.</p>
-<button>입장</button>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="jumbotron">
+        <style>
+            p {
+                font-size: 20px; /* 원하는 크기로 조정 */
+            }
+
+            h1 {
+                font-size: 30px; /* 원하는 크기로 조정 */
+            }
+        </style>
+
+        <h1>한강 가즈아</h1>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var button = document.querySelector('button');
+                    button.addEventListener('click', function() {
+                        window.location.href = '/coin-price';  // 다른 페이지의 URL로 변경해주세요
+                    });
+                });
+            </script>
+        <img src="/static/images/main.jpeg" alt="My Image"> <!-- 이미지 파일 경로 수정 -->
+        <p>코인 시세 확인 - 한강 가즈아 입니다.</p>
+        <style>
+            .btn {
+                width: 150px;
+                height: 100px;
+                background-color: blue; /* 파란색으로 지정 */
+                color: white; /* 글자색을 흰색으로 지정 */
+            }
+        </style>
+        <button class="btn">입장</button>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
 </body>
 </html>
+
