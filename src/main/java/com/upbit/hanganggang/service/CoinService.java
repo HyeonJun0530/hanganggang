@@ -1,7 +1,6 @@
 package com.upbit.hanganggang.service;
 
 import com.upbit.hanganggang.dto.CoinPriceResponseDto;
-import com.upbit.hanganggang.dto.CoinRaspiResponseDto;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -15,6 +14,12 @@ public class CoinService {
 
     private final JSONParser jsonParser = new JSONParser();
 
+    /**
+     * Json을 Dto로 파싱
+     * @param JsonCoinList
+     * @return
+     * @throws ParseException
+     */
     public Map<Integer, Object> createCoinList(List<String> JsonCoinList) throws ParseException {
 
         Map<Integer, Object> coinMap = new HashMap<>();
@@ -52,44 +57,39 @@ public class CoinService {
         return coinMap;
     }
 
-    public List<CoinRaspiResponseDto> raspiCoinList(List<String> JsonCoinList) throws ParseException {
+    public int jsonToInt(String shock) throws ParseException {
+        JSONObject jsonObject = (JSONObject) jsonParser.parse(shock);
 
-        List<CoinRaspiResponseDto> coinList = new ArrayList<>();
+        int shockNum = Integer.parseInt(jsonObject.get("shock").toString());
 
-        DecimalFormat decimalFormat = new DecimalFormat("#,###");
-
-        for (String coin : JsonCoinList) {
-
-            coin = coin.replace("[", "").replace("]", "");
-
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(coin);
-
-            String market = jsonObject.get("market").toString();
-            Double tradePrice = (Double) jsonObject.get("trade_price");
-            String jsonChange = jsonObject.get("change").toString();
-
-            CoinRaspiResponseDto coinRaspiResponseDto = getCoinPriceResponseDto(decimalFormat, market,
-                    tradePrice, jsonChange);
-
-            coinList.add(coinRaspiResponseDto);
-        }
-
-
-        return coinList;
+        return shockNum;
     }
 
+
+    /**
+     * 절대값으로 넘어온 등락률을 FALL, RISE로 넘어온 +/- 여부를 Double Data로 넘겨줌
+     * @param jsonChange
+     * @param jsonChangeRate
+     * @return
+     */
     private Double changeRateDisplay(String jsonChange, String jsonChangeRate) {
         double changeRate = Double.parseDouble(jsonChangeRate);
+        // 소수점 둘째 자리까지 반올림
+        changeRate = Math.round(changeRate * 10000.0) / 100.0;
+
         if (jsonChange.contains("FALL")) {
             changeRate *= -1;
         }
 
-        // 소수점 둘째 자리까지 반올림
-        changeRate = Math.round(changeRate * 100.0) / 100.0;
-
         return changeRate;
     }
 
+    /**
+     * 목록의 코인중 오르거나 내린 코인을 세어 총합을 반환해서 이미지 표시에 사용
+     * @param count
+     * @param jsonChange
+     * @return
+     */
     private static Integer getCount(Integer count, String jsonChange) {
         if (jsonChange.contains("FALL")) {
             count--;
@@ -99,6 +99,15 @@ public class CoinService {
         return count;
     }
 
+    /**
+     * Dto 반환
+     * @param decimalFormat
+     * @param market
+     * @param tradePrice
+     * @param change
+     * @param changeRate
+     * @return
+     */
     private static CoinPriceResponseDto getCoinPriceResponseDto(DecimalFormat decimalFormat, String market,
                                                                 Double tradePrice, String change,
                                                                 Double changeRate) {
@@ -110,16 +119,11 @@ public class CoinService {
         return coinPriceResponseDto;
     }
 
-    private static CoinRaspiResponseDto getCoinPriceResponseDto(DecimalFormat decimalFormat, String market,
-                                                                Double tradePrice, String change) {
-        CoinRaspiResponseDto coinRaspiResponseDto = new CoinRaspiResponseDto();
-        coinRaspiResponseDto.setMarket(market);
-        coinRaspiResponseDto.setTradePrice(decimalFormat.format(tradePrice));
-        coinRaspiResponseDto.setChange(change);
-
-        return coinRaspiResponseDto;
-    }
-
+    /**
+     * change 정보에 따라 문자열을 넣어줌
+     * @param change
+     * @return
+     */
     private String changeStringValue(String change) {
         if (change.contains("FALL")) {
             change = "한강으로 풍덩~";

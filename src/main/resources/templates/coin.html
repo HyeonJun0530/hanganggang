@@ -22,6 +22,8 @@
         <img th:if="${count > 0}" src="/static/images/image1.jpeg" alt="Image 1" />
         <img th:if="${count < 0}" src="/static/images/image2.jpeg" alt="Image 2" />
         <img th:if="${count == 0}" src="/static/images/image3.jpeg" alt="Image 3" />
+        <img th:if="${shock == 1}" src="/static/images/image5.jpeg" alt="Image 5" />
+        <img th:if="${shock == 0}" src="/static/images/image6.jpeg" alt="Image 6" />
     </div>
     <table class="table table-striped">
         <thead>
@@ -49,7 +51,7 @@
     function refreshPage() {
         setTimeout(function() {
             window.location.reload();
-        }, 60000);
+        }, 5000);
     }
 
     // Call the refreshPage function on page load
